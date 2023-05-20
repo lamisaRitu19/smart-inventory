@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Main from './components/Main/Main';
@@ -13,6 +12,9 @@ function App() {
         {
           path: '/',
           element: <Home></Home>
+        },
+        {
+
         }
       ]
     }

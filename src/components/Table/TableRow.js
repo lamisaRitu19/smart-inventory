@@ -14,9 +14,9 @@ const TableRow = () => {
             <td>880250</td>
             <td>3 years</td>
             <td>22 October, 2022</td>
-            <td>
-                <button className='p-1 rounded hover:bg-tableHead mr-3'><FaEdit className='text-editBtn'></FaEdit></button>
-                <button className='p-1 rounded hover:bg-tableHead'><RiDeleteBinLine className='text-delBtn'></RiDeleteBinLine></button>
+            <td className='flex justify-center'>
+                <label className='p-1 rounded hover:bg-tableHead mr-3'><FaEdit className='text-editBtn'></FaEdit></label>
+                <label htmlFor='delete-product' className='p-1 rounded hover:bg-tableHead'><RiDeleteBinLine className='text-delBtn'></RiDeleteBinLine></label>
             </td>
         </tr>
     );

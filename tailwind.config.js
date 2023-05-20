@@ -18,7 +18,8 @@ module.exports = {
       borderColor: 'rgba(0, 0, 0, 0.25)',
       addBtn: '#045692',
       editBtn: '#0F75BC',
-      delBtn: '#EB5757'
+      delBtn: '#EB5757',
+      delBtnBg: 'rgba(235, 87, 87, 0.1)'
     },
     extend: {},
   },
