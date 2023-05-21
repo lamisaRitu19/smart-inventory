@@ -1,8 +1,24 @@
 import Table from '../Table/Table';
 import AddProduct from '../Products/AddProduct/AddProduct';
 import DeleteProduct from '../Products/DeleteProduct/DeleteProduct';
+import { useEffect, useState } from 'react';
 
 const Home = () => {
+    const [addProduct, setAddProduct] = useState(null);
+
+    // useEffect(() => {
+    //     fetch('http://182.163.101.173:49029/product-crud/products', {
+    //         method: "POST",
+    //         headers: {
+    //             "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4=",
+    //             'Content-Type': 'application/json'
+    //         }, 
+    //         body: JSON.stringify(addProduct)
+    //     })
+    //     .then(res => res.json())
+    //     .then(data => console.log(data))
+    // }, [])
+
     const handleSearch = event => {
         const search = document.getElementById('search').value;
         console.log(search);

@@ -3,6 +3,7 @@ import TableRow from './TableRow';
 
 const Table = () => {
     const [products, setProducts] = useState(null);
+    // console.log(products.length);
 
     useEffect(() => {
         fetch('http://182.163.101.173:49029/product-crud/products', {
@@ -36,12 +37,13 @@ const Table = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {
+                    {
                         products && products.map(product => <TableRow
+                            key={product.id}
+                            products={products}
                             product={product}
                         ></TableRow>)
-                    } */}
-                    <TableRow></TableRow>
+                    }
                 </tbody>
             </table>
         </div>
