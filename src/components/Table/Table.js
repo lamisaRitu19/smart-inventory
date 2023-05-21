@@ -1,24 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import TableRow from './TableRow';
 
-const Table = () => {
-    const [products, setProducts] = useState(null);
-    // console.log(products.length);
-
-    useEffect(() => {
-        fetch('http://182.163.101.173:49029/product-crud/products', {
-            method: "GET",
-            withCredentials: true,
-            headers: {
-                "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4=",
-                "Content-Type": "application/json"
-            }
-        })
-            .then(res => res.json())
-            .then(data => setProducts(data))
-            .catch(err => console.error(err))
-    }, [])
-
+const Table = ({ products }) => {
     return (
         <div className='relative overflow-x-auto'>
             <table className="table-auto w-full">
@@ -38,12 +20,19 @@ const Table = () => {
                 </thead>
                 <tbody>
                     {
-                        products && products.map(product => <TableRow
-                            key={product.id}
-                            products={products}
-                            product={product}
-                        ></TableRow>)
+                        (products && products.length > 1) ? products.map(
+                            (product, i) => <TableRow
+                                key={product.id}
+                                index={i}
+                                product={product}
+                            ></TableRow>) :
+                            <TableRow
+                                key={products.id}
+                                index={0}
+                                product={products}
+                            ></TableRow>
                     }
+
                 </tbody>
             </table>
         </div>

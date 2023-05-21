@@ -3,7 +3,7 @@ import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { dateValue } from '../Products/ProductFunctions';
 
-const TableRow = ({ product, products }) => {
+const TableRow = ({ product, index }) => {
     const {
         assetNumber,
         categoryName,
@@ -15,11 +15,9 @@ const TableRow = ({ product, products }) => {
         purchaseDate
     } = product;
 
-
-
     return (
         <tr className='bg-tableBody text-black text-center border border-borderColor rounded-sm py-4 mb-2 lg:grid grid-cols-11'>
-            <td className='py-3 lg:py-0'>{products.indexOf(product) + 1}</td>
+            <td className='py-3 lg:py-0'>{index + 1}</td>
             <td>{assetNumber}</td>
             <td>{categoryName}</td>
             <td><img src={productPhoto} alt="" className='w-7' /></td>
