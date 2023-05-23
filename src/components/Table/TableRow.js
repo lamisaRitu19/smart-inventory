@@ -1,10 +1,10 @@
-import React from 'react';
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { dateValue } from '../Products/ProductFunctions';
 
-const TableRow = ({ product, index }) => {
+const TableRow = ({ product, index, setPID }) => {
     const {
+        id,
         assetNumber,
         categoryName,
         productPhoto,
@@ -27,8 +27,17 @@ const TableRow = ({ product, index }) => {
             <td>{`${warrantyInYears} years`}</td>
             <td>{dateValue(purchaseDate)}</td>
             <td className='flex justify-center'>
-                <label className='p-1 rounded hover:bg-tableHead mr-3'><FaEdit className='text-editBtn'></FaEdit></label>
-                <label htmlFor='delete-product' className='p-1 rounded hover:bg-tableHead'><RiDeleteBin5Line className='text-delBtn'></RiDeleteBin5Line></label>
+                <label
+                    onClick={() => setPID(id)}
+                    htmlFor='edit-inventory'
+                    className='p-1 rounded hover:bg-tableHead hover:cursor-pointer'>
+                    <FaEdit className='text-editBtn'></FaEdit>
+                </label>
+                <label
+                    htmlFor='delete-product'
+                    className='p-1 rounded hover:bg-tableHead hover:cursor-pointer'>
+                    <RiDeleteBin5Line className='text-delBtn'></RiDeleteBin5Line>
+                </label>
             </td>
         </tr>
     );

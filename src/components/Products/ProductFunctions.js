@@ -8,6 +8,16 @@ export const checkWarranty = () => {
         checkFields.style.display = 'none';
     }
 }
+export const editCheckWarranty = () => {
+    const checkBox = document.getElementById('editWarrantyCheck');
+    const checkFields = document.getElementById('editWarrantyFields');
+    if (checkBox.checked) {
+        checkFields.style.display = 'block';
+    }
+    else {
+        checkFields.style.display = 'none';
+    }
+}
 
 export const dateValue = purchaseDate => {
     const monthNames = ["January", "February", "March", "April", "May", "June",

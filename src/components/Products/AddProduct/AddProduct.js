@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { AiOutlineCamera } from "react-icons/ai";
 import { checkWarranty } from '../ProductFunctions';
 
-const AddProduct = ({ addProduct, setAddProduct }) => {
-    const [categories, setCategories] = useState([]);
+const AddProduct = ({ categories, setCategories }) => {
     const [categoryProducts, setCategoryProducts] = useState([]);
 
-    // category type data is fetched
-    useEffect(() => {
-        fetch('http://182.163.101.173:49029/product-crud/products/category-name-wise-product-names')
-            .then(res => res.json())
-            .then(data => setCategories(data))
-    }, [])
-
+    // depending on category type product data is set
     const handleCategory = () => {
         const optionCategory = document.getElementById('optionCategory').value;
         setCategoryProducts(categories[optionCategory].products);
