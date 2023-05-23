@@ -1,38 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { AiOutlineCamera } from "react-icons/ai";
 import { editCheckWarranty } from '../ProductFunctions';
-import { useLoaderData } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
-const EditProduct = ({ categories, setCategories, pID }) => {
-    // const storedProduct = useLoaderData();
-    // console.log(storedProduct);
+const EditProduct = ({ categories, setCategories, pID, setProducts }) => {
     const [categoryProducts, setCategoryProducts] = useState([]);
-    // const [storedProduct, setStoredProduct] = useState(null);
-    // const [editProduct, setEditProduct] = useState(storedProduct);
-    // console.log(editProduct);
 
     // depending on category type product data is set
     const handleCategory = () => {
         const optionCategory = document.getElementById('editOptionCategory').value;
         setCategoryProducts(categories[optionCategory].products);
     }
-
-    // useEffect(() => {
-    //     fetch(`http://182.163.101.173:49029/product-crud/products/${pID}`, {
-    //         method: "GET",
-    //         headers: {
-    //             "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4=",
-    //             "Content-Type": "application/json"
-    //         }
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             console.log(data);
-    //             setStoredProduct(data);
-    //         })
-    // }, [pID])
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -57,7 +36,6 @@ const EditProduct = ({ categories, setCategories, pID }) => {
             "warrantyInYears": warrantyPeriod,
             "warrantyExpireDate": expDate
         }
-        // setEditProduct(editProductObj);
         setProduct(editProductObj);
         form.reset();
         // console.log(category, productName, serialNo, purPrice, purDate, warrantyPeriod, expDate, inputImage);
@@ -82,6 +60,17 @@ const EditProduct = ({ categories, setCategories, pID }) => {
             const result = await response.json();
             console.log(result);
             toast.success('Product successfully updated!');
+
+            fetch('http://182.163.101.173:49029/product-crud/products', {
+                method: "GET",
+                withCredentials: true,
+                headers: {
+                    "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4=",
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => res.json())
+                .then(data => setProducts(data));
         }
         catch (error) {
             console.error("Error: ", error);

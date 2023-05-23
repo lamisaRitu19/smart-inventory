@@ -4,7 +4,7 @@ import AddProduct from '../Products/AddProduct/AddProduct';
 import EditProduct from '../Products/EditProduct/EditProduct';
 import DeleteProduct from '../Products/DeleteProduct/DeleteProduct';
 
-const Table = ({ products }) => {
+const Table = ({ products, setProducts }) => {
     const [categories, setCategories] = useState([]);
     const [pID, setPID] = useState(null);
 
@@ -34,7 +34,7 @@ const Table = ({ products }) => {
                         </tr>
                     </thead>
                     {
-                        products && <tbody>
+                        products ? <tbody>
                             {
                                 (products && products.length > 1) ? products.map(
                                     (product, i) => <TableRow
@@ -51,7 +51,7 @@ const Table = ({ products }) => {
                                     ></TableRow>
                             }
 
-                        </tbody>
+                        </tbody> : <tbody></tbody>
                     }
                 </table>
             </div>
@@ -64,6 +64,7 @@ const Table = ({ products }) => {
                 categories={categories}
                 setCategories={setCategories}
                 pID={pID}
+                setProducts={setProducts}
             ></EditProduct>
             <DeleteProduct></DeleteProduct>
         </div>
