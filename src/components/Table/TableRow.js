@@ -20,7 +20,7 @@ const TableRow = ({ product, index, setPID }) => {
             <td className='py-3 lg:py-0'>{index + 1}</td>
             <td>{assetNumber}</td>
             <td>{categoryName}</td>
-            <td><img src={productPhoto} alt="" className='w-7' /></td>
+            <td><img src={productPhoto?.originalPath} alt="" className='w-7' /></td>
             <td className='col-span-2'>{productName}</td>
             <td>{serialNumber}</td>
             <td>{purchasePrice}</td>

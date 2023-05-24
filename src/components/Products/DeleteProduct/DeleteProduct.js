@@ -1,9 +1,45 @@
 import React from 'react';
+import { toast } from 'react-hot-toast';
 import { RiDeleteBinLine } from "react-icons/ri";
 
-const DeleteProduct = () => {
+const DeleteProduct = ({ pID, setProducts }) => {
     const handlerDeleteProduct = event => {
         event.preventDefault();
+        delProduct();
+    }
+
+    const delProduct = async () => {
+        try {
+            const responseUpdate = await fetch(`http://182.163.101.173:49029/product-crud/products/${pID}`, {
+                method: 'DELETE',
+                headers: {
+                    "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4="
+                }
+            });
+            console.log(responseUpdate);
+            if (!responseUpdate.ok) {
+                const status = responseUpdate.status;
+                toast.error(`Network status: ${status}.`);
+                throw new Error(`Network status: ${status}.`);
+            }
+            const resultUpdate = await responseUpdate.json();
+            console.log(resultUpdate);
+            toast.success('Product successfully deleted!');
+
+            const responseDisplay = await fetch('http://182.163.101.173:49029/product-crud/products', {
+                method: "GET",
+                withCredentials: true,
+                headers: {
+                    "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4=",
+                    "Content-Type": "application/json"
+                }
+            });
+            const resultDisplay = await responseDisplay.json();
+            setProducts(resultDisplay);
+        }
+        catch (error) {
+            console.error("Error: ", error);
+        }
     }
 
     return (

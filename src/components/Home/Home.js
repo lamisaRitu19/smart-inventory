@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 
 const Home = () => {
-    const loadedProducts = useLoaderData();
-    // const [products, setProducts] = useState([]);
-    const [searchedProduct, setSearchedProduct] = useState(loadedProducts);
+    const products = useLoaderData();
+    const [displayProducts, setDisplayProducts] = useState(products);
 
+    // const { products, setProducts, displayProducts, setDisplayProducts } = useContext(Context);
+    // setDisplayProducts(products);
     // useEffect(() => {
     //     fetch('http://182.163.101.173:49029/product-crud/products', {
     //         method: "GET",
@@ -25,22 +26,23 @@ const Home = () => {
 
     const handleSearch = event => {
         const search = document.getElementById('search').value;
-        const matched = loadedProducts.find(product => product.id === parseInt(search));
+        const matched = products.find(product => product.id === parseInt(search));
 
         if (search && matched) {
-            //Searched product object
-            setSearchedProduct(matched);
-            console.log('Search & matched', matched, searchedProduct);
+            setDisplayProducts(matched);
+            console.log('Search & matched', matched, displayProducts);
         }
         else if (search && !matched) {
-            setSearchedProduct(null);
+            setDisplayProducts(null);
             console.log('Search & !matched', matched);
         }
         else {
-            setSearchedProduct(loadedProducts);
+            setDisplayProducts(products);
             console.log('Else Search & matched', matched);
         }
     }
+    console.log(displayProducts);
+
 
     return (
         <div className='p-6 h-screen'>
@@ -52,8 +54,7 @@ const Home = () => {
                     <input onChange={handleSearch} id='search' type="text" placeholder={`Search ID`} className="input input-bordered w-full max-w-xs bg-white border-borderColor text-black" />
                 </div>
             </div>
-            {/* Checking has any searched product or not */}
-            <Table products={searchedProduct} setProducts={setSearchedProduct}></Table>
+            <Table products={displayProducts} setProducts={setDisplayProducts}></Table>
         </div>
     );
 };

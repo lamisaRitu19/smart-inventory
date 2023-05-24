@@ -1,12 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import TableRow from './TableRow';
 import AddProduct from '../Products/AddProduct/AddProduct';
 import EditProduct from '../Products/EditProduct/EditProduct';
 import DeleteProduct from '../Products/DeleteProduct/DeleteProduct';
+import { Context } from '../../context/ContextProvider';
 
 const Table = ({ products, setProducts }) => {
     const [categories, setCategories] = useState([]);
     const [pID, setPID] = useState(null);
+    console.log(products);
+
+    // to check the 'products' value and type, if there is only one product
+    let arrayP = null;
+    if (Array.isArray(products)) {
+        arrayP = true;
+    }
+    console.log(arrayP);
 
     // category types data is fetched
     useEffect(() => {
@@ -44,9 +53,9 @@ const Table = ({ products, setProducts }) => {
                                         setPID={setPID}
                                     ></TableRow>) :
                                     <TableRow
-                                        key={products.id}
+                                        key={arrayP ? products[0].id : products?.id}
                                         index={0}
-                                        product={products}
+                                        product={arrayP ? products[0] : products}
                                         setPID={setPID}
                                     ></TableRow>
                             }
@@ -64,9 +73,13 @@ const Table = ({ products, setProducts }) => {
                 categories={categories}
                 setCategories={setCategories}
                 pID={pID}
+                products={products}
                 setProducts={setProducts}
             ></EditProduct>
-            <DeleteProduct></DeleteProduct>
+            <DeleteProduct
+                pID={pID}
+                setProducts={setProducts}
+            ></DeleteProduct>
         </div>
     );
 };

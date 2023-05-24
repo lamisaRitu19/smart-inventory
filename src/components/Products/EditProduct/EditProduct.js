@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { BsFillPlusCircleFill } from "react-icons/bs";
 import { AiOutlineCamera } from "react-icons/ai";
 import { editCheckWarranty } from '../ProductFunctions';
 import { toast } from 'react-hot-toast';
 
-const EditProduct = ({ categories, setCategories, pID, setProducts }) => {
+const EditProduct = ({ categories, setCategories, pID, products, setProducts }) => {
     const [categoryProducts, setCategoryProducts] = useState([]);
+
+    let matchedProd; // this variable is used to set values on modal before editing
+    // checking if 'products' is array or object
+    if (Array.isArray(products)) {
+        matchedProd = products?.find(product => product.id === pID);
+    } else matchedProd = products;
 
     // depending on category type product data is set
     const handleCategory = () => {
@@ -38,12 +43,11 @@ const EditProduct = ({ categories, setCategories, pID, setProducts }) => {
         }
         setProduct(editProductObj);
         form.reset();
-        // console.log(category, productName, serialNo, purPrice, purDate, warrantyPeriod, expDate, inputImage);
     }
 
     const setProduct = async (editProductObj) => {
         try {
-            const response = await fetch(`http://182.163.101.173:49029/product-crud/products/${pID}`, {
+            const responseUpdate = await fetch(`http://182.163.101.173:49029/product-crud/products/${pID}`, {
                 method: 'PUT',
                 headers: {
                     "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4=",
@@ -51,26 +55,26 @@ const EditProduct = ({ categories, setCategories, pID, setProducts }) => {
                 },
                 body: JSON.stringify(editProductObj)
             });
-            console.log(response);
-            if (!response.ok) {
-                const status = response.status;
+            console.log(responseUpdate);
+            if (!responseUpdate.ok) {
+                const status = responseUpdate.status;
                 toast.error(`Network status: ${status}. Fill up the form correctly!`);
                 throw new Error(`Network status: ${status}. Fill up the form correctly!`);
             }
-            const result = await response.json();
-            console.log(result);
+            const resultUpdate = await responseUpdate.json();
+            console.log(resultUpdate);
             toast.success('Product successfully updated!');
 
-            fetch('http://182.163.101.173:49029/product-crud/products', {
+            const responseDisplay = await fetch('http://182.163.101.173:49029/product-crud/products', {
                 method: "GET",
                 withCredentials: true,
                 headers: {
                     "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4=",
                     "Content-Type": "application/json"
                 }
-            })
-                .then(res => res.json())
-                .then(data => setProducts(data));
+            });
+            const resultDisplay = await responseDisplay.json();
+            setProducts(resultDisplay);
         }
         catch (error) {
             console.error("Error: ", error);
@@ -92,6 +96,8 @@ const EditProduct = ({ categories, setCategories, pID, setProducts }) => {
                                     categories && categories.map(
                                         (category, i) => <option
                                             key={i}
+                                            defaultValue={matchedProd?.categoryName
+                                            }
                                             value={i}
                                         >{category.name}</option>)
                                 }
@@ -104,6 +110,8 @@ const EditProduct = ({ categories, setCategories, pID, setProducts }) => {
                                     categoryProducts && categoryProducts.map(
                                         (pr, i) => <option
                                             key={i}
+                                            defaultValue={matchedProd?.productName
+                                            }
                                             value={pr.name}
                                         >{pr.name}</option>)
                                 }
@@ -111,15 +119,15 @@ const EditProduct = ({ categories, setCategories, pID, setProducts }) => {
                         </div>
                         <div className="form-control grid grid-cols-3 items-center mb-2">
                             <label className="text-right mr-4">Serial Number</label>
-                            <input type="number" name='serialNo' className="input input-bordered rounded-none col-span-2" />
+                            <input type="number" name='serialNo' defaultValue={matchedProd?.serialNumber} className="input input-bordered rounded-none col-span-2" />
                         </div>
                         <div className="form-control grid grid-cols-3 items-center mb-2">
                             <label className="text-right mr-4">Purchase Price <span className='text-delBtn'>*</span></label>
-                            <input type="number" name='purPrice' className="input input-bordered rounded-none col-span-2" required />
+                            <input type="number" defaultValue={matchedProd?.purchasePrice} name='purPrice' className="input input-bordered rounded-none col-span-2" required />
                         </div>
                         <div className="form-control grid grid-cols-3 items-center mb-3">
                             <label className="text-right mr-4">Purchase Date <span className='text-delBtn'>*</span></label>
-                            <input type="date" name='purDate' min="2020-01-01" max="2024-01-01" className="input input-bordered rounded-none col-span-2" required />
+                            <input type="date" name='purDate' defaultValue={matchedProd?.purchaseDate} min="2020-01-01" max="2024-01-01" className="input input-bordered rounded-none col-span-2" required />
                         </div>
                         <div className="form-control grid grid-cols-3 items-center">
                             <label></label>
@@ -131,11 +139,11 @@ const EditProduct = ({ categories, setCategories, pID, setProducts }) => {
                         <div id='editWarrantyFields' className='hidden'>
                             <div className="form-control grid grid-cols-3 items-center mb-2">
                                 <label className="text-right mr-4">Warranty <span className='text-delBtn'>*</span></label>
-                                <input type="number" name='warrantyPeriod' className="input input-bordered rounded-none col-span-2" />
+                                <input type="number" defaultValue={matchedProd?.warrantyInYears} name='warrantyPeriod' className="input input-bordered rounded-none col-span-2" />
                             </div>
                             <div className="form-control grid grid-cols-3 items-center mb-2">
                                 <label className="text-right mr-4">Warranty Expire Date <span className='text-delBtn'>*</span></label>
-                                <input type="date" name='expDate' min="2023-05-01" max="2027-05-01" className="input input-bordered rounded-none col-span-2" />
+                                <input type="date" defaultValue={matchedProd?.warrantyExpireDate} name='expDate' min="2023-05-01" max="2027-05-01" className="input input-bordered rounded-none col-span-2" />
                             </div>
                         </div>
                         <div className="form-control grid lg:grid-cols-3 items-center my-8">
@@ -150,10 +158,6 @@ const EditProduct = ({ categories, setCategories, pID, setProducts }) => {
                                 <img src="" alt="" className='w-40' />
                             </div>
                         </div>
-                        <button className='text-editBtn font-semibold flex justify-end items-center mb-8'>
-                            <BsFillPlusCircleFill className='mr-1'></BsFillPlusCircleFill>
-                            Add more Product
-                        </button>
                         <div className="flex justify-end">
                             <label htmlFor="edit-inventory" className="btn btn-outline border-delBtn text-delBtn rounded-none px-5 py-2 mr-3 hover:bg-white hover:border-delBtn hover:text-delBtn">Cancel</label>
                             <button type='submit' className="btn bg-editBtn text-white border-0 rounded-none px-6 py-2 hover:bg-editBtn">Save</button>
