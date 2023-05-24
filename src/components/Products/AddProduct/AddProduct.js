@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { AiOutlineCamera } from "react-icons/ai";
 import { checkWarranty } from '../ProductFunctions';
+import { toast } from 'react-hot-toast';
 
-const AddProduct = ({ categories, setCategories }) => {
+const AddProduct = ({ categories, setCategories, setProducts }) => {
     const [categoryProducts, setCategoryProducts] = useState([]);
+    const [addArray, setAddArray] = useState([]);
+    console.log(addArray);
 
     // depending on category type product data is set
     const handleCategory = () => {
@@ -14,6 +17,12 @@ const AddProduct = ({ categories, setCategories }) => {
 
     const handleSubmit = event => {
         event.preventDefault();
+        // if (addArray.length === 0) {
+        //     console.log('Please click add more products to add current product', addArray)
+        // }
+        // else {
+        //     console.log('Uploaded ', addArray)
+        // }
         const form = event.target;
         const categoryVal = form.category.value;
         const category = categories[categoryVal].name;
@@ -25,15 +34,93 @@ const AddProduct = ({ categories, setCategories }) => {
         const expDate = form.expDate.value;
         const inputImage = form.inputImage.value;
 
-        const addProductObj = {
-            category, productName, serialNo, purPrice, purDate, warrantyPeriod, expDate
+        const editProductObj = {
+            "categoryName": category,
+            "productName": productName,
+            "serialNumber": serialNo,
+            "purchasePrice": purPrice,
+            "purchaseDate": purDate,
+            "warrantyInYears": warrantyPeriod,
+            "warrantyExpireDate": expDate
         }
+        const objArr = [editProductObj];
+        setAddArray(objArr);
+        console.log('onsubmit addArray', objArr)
+        setProduct(objArr);
+        form.reset();
 
-        // if (!addProduct) setAddProduct(addProductObj);
-        // else setAddProduct(null);
+        // console.log(category, productName, serialNo, purPrice, purDate, warrantyPeriod, expDate, inputImage);
+    }
 
-        console.log(category, productName, serialNo, purPrice, purDate, warrantyPeriod, expDate, inputImage);
-        // form.reset();
+    // const handlerAdd = () => {
+    //     const form = document.getElementById('form');
+
+    //     const categoryVal = form.category.value;
+    //     const category = categories[categoryVal].name;
+    //     const productName = form.productName.value;
+    //     const serialNo = form.serialNo.value;
+    //     const purPrice = form.purPrice.value;
+    //     const purDate = form.purDate.value;
+    //     const warrantyPeriod = form.warrantyPeriod.value;
+    //     const expDate = form.expDate.value;
+    //     const inputImage = form.inputImage.value;
+
+    //     const editProductObj = {
+    //         "categoryName": category,
+    //         "productName": productName,
+    //         "serialNumber": serialNo,
+    //         "purchasePrice": purPrice,
+    //         "purchaseDate": purDate,
+    //         "warrantyInYears": warrantyPeriod,
+    //         "warrantyExpireDate": expDate
+    //     }
+    //     const objArr = [...addArray, editProductObj];
+    //     setAddArray(objArr);
+    //     // console.log(addArray);
+    // }
+
+    const setProduct = async (_addedProduct) => {
+        try {
+            const responseUpdate = await fetch('http://182.163.101.173:49029/product-crud/products/multiple', {
+                method: 'POST',
+                headers: {
+                    "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4=",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(_addedProduct)
+            });
+            console.log(responseUpdate);
+            if (!responseUpdate.ok) {
+                const status = responseUpdate.status;
+                toast.error(`Network status: ${status}. Fill up the form correctly!`);
+                throw new Error(`Network status: ${status}. Fill up the form correctly!`);
+            }
+            const resultUpdate = await responseUpdate.json();
+            console.log('onPost resultUpdate', resultUpdate)
+            setAddArray([]);
+            console.log(resultUpdate);
+            toast.success('Product successfully added!');
+
+            fetch('http://182.163.101.173:49029/product-crud/products', {
+                method: "GET",
+                withCredentials: true,
+                headers: {
+                    "apiKey": "r2N0zvMjBcJZa45Jql9fR/f6r7KmogqGsntwHGTcqc4=",
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => res.json()
+                    .then(data => {
+                        setProducts(data);
+                        console.log('onGet', data);
+                    }))
+            //const resultDisplay = await responseDisplay.json();
+
+            // setProducts(resultDisplay);
+        }
+        catch (error) {
+            console.error("Error: ", error);
+        }
     }
 
     return (
@@ -43,7 +130,7 @@ const AddProduct = ({ categories, setCategories }) => {
                 <div className="modal-box w-11/12 max-w-3xl rounded-none">
                     <label htmlFor="add-inventory" className="btn bg-white border-0 text-black absolute right-2 top-2 hover:bg-white">✕</label>
                     <h3 className='text-xl text-center font-semibold'>Add New Product</h3>
-                    <form onSubmit={handleSubmit} className="card-body text-modalTxt">
+                    <form id='form' onSubmit={handleSubmit} className="card-body text-modalTxt">
                         <div className="form-control grid grid-cols-3 items-center mb-2">
                             <label className="text-right mr-4">Category <span className='text-delBtn'>*</span></label>
                             <select onChange={handleCategory} name='category' id='optionCategory' className="select select-bordered rounded-none col-span-2" required>

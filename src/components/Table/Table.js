@@ -68,6 +68,7 @@ const Table = ({ products, setProducts }) => {
             <AddProduct
                 categories={categories}
                 setCategories={setCategories}
+                setProducts={setProducts}
             ></AddProduct>
             <EditProduct
                 categories={categories}
